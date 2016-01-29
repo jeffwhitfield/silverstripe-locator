@@ -16,10 +16,12 @@ $.fn.storeLocator = function(options) {
       'inputID': 'address',
       'categoryID': 'category',
       'zoomLevel': 12,
-      'pinColor': 'fe7569',
+      'pinColor': 'DCDBDB',
       'pinTextColor': '000000',
+      'pinColorFeatured': '8c1c24',
+      'pinTextColorFeatured': 'DCDBDB',
       'lengthUnit': 'm',
-      'storeLimit': 26,
+      'storeLimit': 15,
       'distanceAlert': 60,
       'dataType': 'xml',
       'dataLocation': 'locations.xml',
@@ -312,8 +314,10 @@ $.fn.storeLocator = function(options) {
       });
     }
     else{
-      $(document).on('submit.'+prefix, '#' + settings.formID, function(e){
+      $('#' + settings.formID + ' input[type=submit]').click(function(e){
+        e.preventDefault();
         get_form_values(e);
+        return false;
       });
     }
   });
@@ -454,6 +458,7 @@ $.fn.storeLocator = function(options) {
               $(data).find('marker').each(function(){
                 var locationData = {
                   'name': $(this).attr('name'),
+                  'store': $(this).attr('store'),
                   'lat': $(this).attr('lat'),
                   'lng': $(this).attr('lng'),
                   'address': $(this).attr('address'),
@@ -691,8 +696,9 @@ $.fn.storeLocator = function(options) {
               //Add markers and infowindows loop
               for(var y = 0; y <= storenum; y++) { 
                 var letter = String.fromCharCode("A".charCodeAt(0) + y);
-                var point = new google.maps.LatLng(locationset[y]['lat'], locationset[y]['lng']);             
-                marker = createMarker(point, locationset[y]['name'], locationset[y]['address'], letter );
+                var point = new google.maps.LatLng(locationset[y]['lat'], locationset[y]['lng']);  
+                var featured = locationset[y]['featured'] === 'true' ? true : false;
+                marker = createMarker(point, locationset[y]['name'], locationset[y]['address'], letter, featured );
                 marker.set("id", y);
                 markers[y] = marker;
                 if((settings.fullMapStart === true && firstRun === true) || settings.zoomLevel === 0){
@@ -747,13 +753,15 @@ $.fn.storeLocator = function(options) {
               });
 
               //Add the list li background colors
-              $("#" + settings.listDiv + " ul li:even").css('background', "#" + settings.listColor1);
-              $("#" + settings.listDiv + " ul li:odd").css('background', "#" + settings.listColor2);
+              // $("#" + settings.listDiv + " ul li:even").css('background', "#" + settings.listColor1);
+              // $("#" + settings.listDiv + " ul li:odd").css('background', "#" + settings.listColor2);
                
               //Custom marker function - alphabetical
-              function createMarker(point, name, address, letter){
+              function createMarker(point, name, address, letter, featured){
                 //Set up pin icon with the Google Charts API for all of our markers
-                var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + letter + "|" + settings.pinColor + "|" + settings.pinTextColor,
+                var pinColor = (featured ? settings.pinColorFeatured : settings.pinColor);
+                var pinTextColor = (featured ? settings.pinTextColorFeatured : settings.pinTextColor);
+                var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + letter + "|" + pinColor + "|" + pinTextColor,
                   new google.maps.Size(21, 34),
                   new google.maps.Point(0,0),
                   new google.maps.Point(10, 34));
@@ -823,3 +831,26 @@ $.fn.storeLocator = function(options) {
   });
 };
 })(jQuery);
+
+Handlebars.registerHelper('iff', function(a, operator, b, opts) {
+    var bool = false;
+    switch(operator) {
+       case '==':
+           bool = a == b;
+           break;
+       case '>':
+           bool = a > b;
+           break;
+       case '<':
+           bool = a < b;
+           break;
+       default:
+           throw "Unknown operator " + operator;
+    }
+ 
+    if (bool) {
+        return opts.fn(this);
+    } else {
+        return opts.inverse(this);
+    }
+});

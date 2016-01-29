@@ -2,9 +2,10 @@
 class LocationCsvBulkLoader extends CsvBulkLoader {
    public $columnMap = array(
       'Name' => 'Title', 
-      //'Address' => 'Address', 
-      'City' => 'Suburb',
-      //'State' => 'State',
+      'Address' => 'Address', 
+      'Address2' => 'Address2', 
+      'City' => 'City',
+      'State' => 'State',
       'Zip' => 'Postcode',
       'Category' => 'Category.Name',
 	  'Email' => 'EmailAddress'
@@ -12,7 +13,7 @@ class LocationCsvBulkLoader extends CsvBulkLoader {
    
    public $duplicateChecks = array(
       'Address' => 'Address',
-      //'Website' => 'Website'
+      'Website' => 'Website'
    );
    
    public $relationCallbacks = array(

@@ -4,6 +4,7 @@ class Location extends DataObject implements PermissionProvider{
 
 	static $db = array(
 		'Title' => 'Varchar(255)',
+        'Store' => 'Varchar(255)',
 		'Featured' => 'Boolean',
 		'Website' => 'Varchar(255)',
 		'Phone' => 'Varchar(40)',
@@ -34,32 +35,36 @@ class Location extends DataObject implements PermissionProvider{
 
     // search fields for Model Admin
     private static $searchable_fields = array(
-        'Title',
-        'Address',
-        'Suburb',
-        'State',
-        'Postcode',
-        'Country',
-        'Category.ID',
-        'ShowInLocator',
-        'Featured',
-        'Website',
-        'Phone',
-        'EmailAddress'
+        'Title' => 'Title',
+        'Store' => 'Store #',
+        'Address' => 'Address',
+        'Address2' => 'Address 2',
+        'City' => 'City',
+        'State' => 'State',
+        'Postcode' => 'Postcode',
+        'Country' => 'Country',
+        'Category.ID' => 'Category',
+        'ShowInLocator' => 'Show in Locator',
+        'Featured' => 'Featured',
+        'Website' => 'Website',
+        'Phone' => 'Phone',
+        'EmailAddress' => 'Email'
     );
 	
 	// columns for grid field
 	static $summary_fields = array(
-		'Title',
-		'Address',
-		'Suburb',
-		'State',
-		'Postcode',
-		'Country',
-		'Category.Name',
-		'ShowInLocator.NiceAsBoolean',
-		'Featured.NiceAsBoolean',
-        'Coords'
+		'Title' => 'Title',
+        'Store' => 'Store',
+		'Address' => 'Address',
+        'Address2' => 'Address 2',
+		'City' => 'City',
+		'State' => 'State',
+		'Postcode' => 'Postcode',
+		'Country' => 'Country',
+		'Category.Name' => 'Category',
+		'ShowInLocator.NiceAsBoolean' => 'Show in Locator',
+		'Featured.NiceAsBoolean' => 'Featured',
+        'Coords' => 'Coordinates'
 	);
 
 	// Coords status for $summary_fields
@@ -72,7 +77,8 @@ class Location extends DataObject implements PermissionProvider{
      	$labels = parent::fieldLabels();
 
      	$labels['Title'] = 'Name';
-     	$labels['Suburb'] = "City";
+        $labels['Store'] = 'Store #';
+     	$labels['City'] = "City";
      	$labels['Postcode'] = 'Postal Code';
      	$labels['ShowInLocator'] = 'Show';
         $labels['ShowInLocator.NiceAsBoolean'] = 'Show';
@@ -94,14 +100,15 @@ class Location extends DataObject implements PermissionProvider{
 		// create and populate Info tab
 		$fields->addFieldsToTab('Root.Info', array(
 			HeaderField::create('InfoHeader', 'Contact Information'),
+            TextField::create('Store'),
 			TextField::create('Website'),
 			TextField::create('EmailAddress'),
 			TextField::create('Phone')
 		));
 		
 		// change label of Suburb from Addressable to City
-		$fields->removeByName('Suburb');
-		$fields->insertBefore(TextField::create('Suburb', 'City'), 'State');
+//		$fields->removeByName('Suburb');
+//		$fields->insertBefore(TextField::create('Suburb', 'City'), 'State');
 		
 		// If categories have been created, show category drop down
 		if (LocationCategory::get()->Count() > 0) {

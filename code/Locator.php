@@ -23,6 +23,11 @@ class Locator extends Page {
     public function getCMSFields() {
 	    $fields = parent::getCMSFields();
 
+        $fields->removeByName('Subheading');
+        $fields->removeByName('Lead');
+        $fields->removeByName('Image');
+        $fields->removeByName('ImagePosition');
+
 	    // Locations Grid Field
 		$config = (self::getMultipleLocators())
             ? GridFieldConfig_RelationEditor::create() : GridFieldConfig_RecordEditor::create();
@@ -83,11 +88,14 @@ class Locator_Controller extends Page_Controller {
 			Requirements::javascript('locator/thirdparty/jquery-store-locator/js/jquery.storelocator.js');
 		}
 
-		Requirements::css('locator/css/map.css');
+//		Requirements::css('locator/css/map.css');
 
+/*
 		$featured = (Locator::getLocations(array('Featured' => 1))->count() > 0) ?
 			'featuredLocations: true' :
 			'featuredLocations: false';
+*/
+        $featured = 'featuredLocations: false';
 
 		// map config based on user input in Settings tab
 		// AutoGeocode or Full Map
@@ -126,7 +134,7 @@ class Locator_Controller extends Page_Controller {
                     " . $modal . ",
                     " . $featured . ",
                     slideMap: false,
-                    zoomLevel: 0,
+                    zoomLevel: 10,
                     distanceAlert: 120,
                     formID: 'Form_LocationSearch',
                     inputID: 'Form_LocationSearch_address',
@@ -176,6 +184,7 @@ class Locator_Controller extends Page_Controller {
 	public function LocationSearch() {
 		$fields = FieldList::create(
 			$address = TextField::create('address', '')
+                ->setTitle("Address")
 		);
 		$address->setAttribute('placeholder', 'address or zip code');
 
@@ -204,7 +213,7 @@ class Locator_Controller extends Page_Controller {
 			FormAction::create('', 'Search')
 		);
 
-		return Form::create($this, 'LocationSearch', $fields, $actions);
+		return Form::create($this, 'LocationSearch', $fields, $actions)->addExtraClass("form-inline locator-form");
 
 	}
 
