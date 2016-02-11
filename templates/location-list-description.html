@@ -7,17 +7,17 @@
 			{{#if store}}
 				<div class="loc-store">Store #{{store}}</div>
 			{{/if}}
-			<div class="loc-addr">{{address}}</div> 
-			<div class="loc-addr2">{{address2}}</div> 
-			<div class="loc-addr3">{{city}}, {{state}} {{postal}}</div> 
-			<div class="loc-phone">{{phone}}</div> 
+			<div class="loc-addr">{{address}}</div>
+			<div class="loc-addr2">{{address2}}</div>
+			<div class="loc-addr3">{{suburb}}, {{state}} {{postal}}</div>
+			<div class="loc-phone">{{phone}}</div>
 			{{#if web}}
 				<div class="loc-web"><a href="http://{{web}}" target="_blank">Website</a></div>
 			{{/if}}
 			{{#if distance}}
 				<div class="loc-dist">
-					{{distance}} {{length}} | 
-					<a href="http://maps.google.com/maps?saddr={{origin}}&amp;daddr={{address}} {{address2}} {{city}}, {{state}} {{postal}}" target="_blank">Directions</a>
+					{{distance}} {{length}} |
+					<a href="http://maps.google.com/maps?saddr={{origin}}&amp;daddr={{address}} {{address2}} {{suburb}}, {{state}} {{postal}}" target="_blank">Directions</a>
 				</div>
 			{{/if}}
 		</div>
