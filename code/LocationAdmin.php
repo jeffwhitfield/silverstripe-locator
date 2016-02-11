@@ -19,7 +19,7 @@ class LocationAdmin extends ModelAdmin {
       'Title' => 'Name',
       'Address' => 'Address',
       'Address2' => 'Address 2',
-      'City' => 'City',
+      'Suburb' => 'City',
       'State' => 'State',
       'Postcode' => 'Postal Code',
       'Country' => 'Country',

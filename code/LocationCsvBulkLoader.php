@@ -4,7 +4,7 @@ class LocationCsvBulkLoader extends CsvBulkLoader {
     'Name' => 'Title',
     'Address' => 'Address',
     'Address2' => 'Address2',
-    'City' => 'City',
+    'City' => 'Suburb',
     'State' => 'State',
     'Zip' => 'Postcode',
     'Category' => 'Category.Name',

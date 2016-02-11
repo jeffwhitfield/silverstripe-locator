@@ -38,7 +38,7 @@ class Location extends DataObject implements PermissionProvider{
     'Store' => 'Store #',
     'Address' => 'Address',
     'Address2' => 'Address 2',
-    'City' => 'City',
+    'Suburb' => 'Suburb',
     'State' => 'State',
     'Postcode' => 'Postcode',
     'Country' => 'Country',
@@ -56,7 +56,7 @@ class Location extends DataObject implements PermissionProvider{
 		'Store' => 'Store',
 		'Address' => 'Address',
 		'Address2' => 'Address 2',
-		'City' => 'City',
+		'Suburb' => 'Suburb',
 		'State' => 'State',
 		'Postcode' => 'Postcode',
 		'Country' => 'Country',
@@ -77,7 +77,7 @@ class Location extends DataObject implements PermissionProvider{
 
 		$labels['Title'] = 'Name';
 		$labels['Store'] = 'Store #';
-		$labels['City'] = "City";
+		$labels['Suburb'] = "City";
 		$labels['Postcode'] = 'Postal Code';
 		$labels['ShowInLocator'] = 'Show';
 		$labels['ShowInLocator.NiceAsBoolean'] = 'Show';
