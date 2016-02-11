@@ -1,56 +1,55 @@
 <?php
-
 class Locator extends Page {
 
 	private static $db = array(
 		'AutoGeocode' => 'Boolean',
 		'ModalWindow' => 'Boolean',
-        'Unit' => 'Enum("km,m","m")'
+		'Unit' => 'Enum("km,m","m")'
 	);
 
-    private static $has_many = array(
-        'Locations' => 'Location'
-    );
+	private static $has_many = array(
+	  'Locations' => 'Location'
+	);
 
 	private static $defaults = array(
 		'AutoGeocode' => true
 	);
 
 	private static $singular_name = "Locator";
-    private static $plural_name = "Locators";
-    private static $description = 'Find locations on a map';
+  private static $plural_name = "Locators";
+  private static $description = 'Find locations on a map';
 
-    public function getCMSFields() {
-	    $fields = parent::getCMSFields();
+  public function getCMSFields() {
+		$fields = parent::getCMSFields();
 
-        $fields->removeByName('Subheading');
-        $fields->removeByName('Lead');
-        $fields->removeByName('Image');
-        $fields->removeByName('ImagePosition');
+		$fields->removeByName('Subheading');
+		$fields->removeByName('Lead');
+		$fields->removeByName('Image');
+		$fields->removeByName('ImagePosition');
 
-	    // Locations Grid Field
+    // Locations Grid Field
 		$config = (self::getMultipleLocators())
-            ? GridFieldConfig_RelationEditor::create() : GridFieldConfig_RecordEditor::create();
-        $locations = (self::getMultipleLocators()) ? $this->Locations() : Location::get();
-	    $fields->addFieldToTab("Root.Locations", GridField::create("Locations", "Locations", $locations, $config));
+          ? GridFieldConfig_RelationEditor::create() : GridFieldConfig_RecordEditor::create();
+    $locations = (self::getMultipleLocators()) ? $this->Locations() : Location::get();
+    $fields->addFieldToTab("Root.Locations", GridField::create("Locations", "Locations", $locations, $config));
 
-	    // Location categories
-	    $config = GridFieldConfig_RecordEditor::create();
-	    $fields->addFieldToTab("Root.Categories", GridField::create("Categories", "Categories", LocationCategory::get(), $config));
+    // Location categories
+    $config = GridFieldConfig_RecordEditor::create();
+    $fields->addFieldToTab("Root.Categories", GridField::create("Categories", "Categories", LocationCategory::get(), $config));
 
-	    // Settings
-	    $fields->addFieldsToTab('Root.Settings', array(
-	    	HeaderField::create('DisplayOptions', 'Display Options', 3),
-            OptionsetField::create('Unit', 'Unit of measure', array('km' => 'Kilometers', 'm' => 'Miles')),
-	    	CheckboxField::create('AutoGeocode', 'Auto Geocode - Automatically filter map results based on user location')
+    // Settings
+    $fields->addFieldsToTab('Root.Settings', array(
+    	HeaderField::create('DisplayOptions', 'Display Options', 3),
+      OptionsetField::create('Unit', 'Unit of measure', array('km' => 'Kilometers', 'm' => 'Miles')),
+    	CheckboxField::create('AutoGeocode', 'Auto Geocode - Automatically filter map results based on user location')
 				->setDescription('Note: if any locations are set as featured, the auto geocode is automatically disabled.'),
-	    	CheckboxField::create('ModalWindow', 'Modal Window - Show Map results in a modal window')
-	    ));
+    	CheckboxField::create('ModalWindow', 'Modal Window - Show Map results in a modal window')
+    ));
 
 		$this->extend('updateCMSFields', $fields);
 
-	    return $fields;
-    }
+    return $fields;
+  }
 
 	public static function getLocations($filter = array(), $exclude = array()){
 		$filter['ShowInLocator'] = true;
@@ -64,9 +63,9 @@ class Locator extends Page {
 		return self::getLocations();
 	}
 
-    public static function getMultipleLocators(){
-        return (Locator::get()->count() > 1) ? true : false;
-    }
+  public static function getMultipleLocators(){
+    return (Locator::get()->count() > 1) ? true : false;
+  }
 
 }
 
@@ -95,7 +94,7 @@ class Locator_Controller extends Page_Controller {
 			'featuredLocations: true' :
 			'featuredLocations: false';
 */
-        $featured = 'featuredLocations: false';
+    $featured = 'featuredLocations: false';
 
 		// map config based on user input in Settings tab
 		// AutoGeocode or Full Map
@@ -116,54 +115,54 @@ class Locator_Controller extends Page_Controller {
 		// in page or modal
 		$modal = ($this->data()->ModalWindow) ? 'modalWindow: true' : 'modalWindow: false';
 
-        $kilometer = ($this->data()->Unit == 'km') ? 'lengthUnit: "km"' : 'lengthUnit: "m"';
+    $kilometer = ($this->data()->Unit == 'km') ? 'lengthUnit: "km"' : 'lengthUnit: "m"';
 
-        $link = $this->Link() . "xml.xml";
-        $link .= (Locator::getMultipleLocators()) ? "?locatorID=" . $this->data()->ID : "" ;
+    $link = $this->Link() . "xml.xml";
+    $link .= (Locator::getMultipleLocators()) ? "?locatorID=" . $this->data()->ID : "" ;
 
 		// init map
-        if(Locator::getLocations()) {
-            Requirements::customScript("
-                $(function($) {
-                  $('#map-container').storeLocator({
-                    " . $load . "
-                    dataLocation: '" . $link . "',
-                    listTemplatePath: '" . $listTemplatePath . "',
-                    infowindowTemplatePath: '" . $infowindowTemplatePath . "',
-                    originMarker: true,
-                    " . $modal . ",
-                    " . $featured . ",
-                    slideMap: false,
-                    zoomLevel: 10,
-                    distanceAlert: 120,
-                    formID: 'Form_LocationSearch',
-                    inputID: 'Form_LocationSearch_address',
-                    categoryID: 'Form_LocationSearch_category',
-                    distanceAlert: -1,
-                    " . $kilometer . "
-                  });
-                });
-            ");
-        }
+    if(Locator::getLocations()) {
+      Requirements::customScript("
+        $(function($) {
+          $('#map-container').storeLocator({
+            " . $load . "
+            dataLocation: '" . $link . "',
+            listTemplatePath: '" . $listTemplatePath . "',
+            infowindowTemplatePath: '" . $infowindowTemplatePath . "',
+            originMarker: true,
+            " . $modal . ",
+            " . $featured . ",
+            slideMap: false,
+            zoomLevel: 10,
+            distanceAlert: 120,
+            formID: 'Form_LocationSearch',
+            inputID: 'Form_LocationSearch_address',
+            categoryID: 'Form_LocationSearch_category',
+            distanceAlert: -1,
+            " . $kilometer . "
+          });
+        });
+      ");
+    }
 
 	}
 
 	/**
-	 * Find all locations for map
-	 *
-	 * Will return a XML feed of all locations marked "show in locator".
-	 *
-	 * @access public
-	 * @return XML file
-     * @todo rename/refactor to allow for json/xml
-	 */
+	* Find all locations for map
+	*
+	* Will return a XML feed of all locations marked "show in locator".
+	*
+	* @access public
+	* @return XML file
+	* @todo rename/refactor to allow for json/xml
+	*/
 	public function xml(SS_HTTPRequest $request) {
-        $filter = array();
-        if(Locator::getMultipleLocators()){//only checks published locators
-            if($request->getVar('locatorID')){
-                $filter['LocatorID'] = $request->getVar('locatorID');
-            }
-        }
+    $filter = array();
+    if(Locator::getMultipleLocators()){//only checks published locators
+      if($request->getVar('locatorID')){
+        $filter['LocatorID'] = $request->getVar('locatorID');
+      }
+    }
 		$Locations = Locator::getLocations($filter);
 
 		return $this->customise(array(
@@ -184,13 +183,13 @@ class Locator_Controller extends Page_Controller {
 	public function LocationSearch() {
 		$fields = FieldList::create(
 			$address = TextField::create('address', '')
-                ->setTitle("Address")
+      	->setTitle("Address")
 		);
 		$address->setAttribute('placeholder', 'address or zip code');
 
 		if (LocationCategory::get()->Count() > 0) {
 
-            $filter = ($this->data()->getMultipleLocators()) ? array('LocatorID' => $this->data()->ID) : array();
+			$filter = ($this->data()->getMultipleLocators()) ? array('LocatorID' => $this->data()->ID) : array();
 			$locals = Locator::getLocations($filter, $exclude = array('CategoryID' => 0));
 			//debug::show($locals);
 			$categories = ArrayList::create();

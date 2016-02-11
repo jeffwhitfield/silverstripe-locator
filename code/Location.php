@@ -1,62 +1,61 @@
 <?php
-
 class Location extends DataObject implements PermissionProvider{
 
 	static $db = array(
 		'Title' => 'Varchar(255)',
-        'Store' => 'Varchar(255)',
+		'Store' => 'Varchar(255)',
 		'Featured' => 'Boolean',
 		'Website' => 'Varchar(255)',
 		'Phone' => 'Varchar(40)',
 		'EmailAddress' => 'Varchar(255)',
 		'ShowInLocator' => 'Boolean',
 	);
-	
+
 	static $has_one = array(
 		'Category' => 'LocationCategory',
-        'Locator' => 'Locator'
+		'Locator' => 'Locator'
 	);
-		
+
 	static $casting = array(
 		'distance' => 'Int'
 	);
-	
+
 	static $default_sort = 'Title';
 
 	static $defaults = array(
 		'ShowInLocator' => true
 	);
-	
+
 	public static $singular_name = "Location";
 	public static $plural_name = "Locations";
 
 	// api access via Restful Server module
 	static $api_access = true;
 
-    // search fields for Model Admin
-    private static $searchable_fields = array(
-        'Title' => 'Title',
-        'Store' => 'Store #',
-        'Address' => 'Address',
-        'Address2' => 'Address 2',
-        'City' => 'City',
-        'State' => 'State',
-        'Postcode' => 'Postcode',
-        'Country' => 'Country',
-        'Category.ID' => 'Category',
-        'ShowInLocator' => 'Show in Locator',
-        'Featured' => 'Featured',
-        'Website' => 'Website',
-        'Phone' => 'Phone',
-        'EmailAddress' => 'Email'
-    );
-	
+  // search fields for Model Admin
+  private static $searchable_fields = array(
+    'Title' => 'Title',
+    'Store' => 'Store #',
+    'Address' => 'Address',
+    'Address2' => 'Address 2',
+    'City' => 'City',
+    'State' => 'State',
+    'Postcode' => 'Postcode',
+    'Country' => 'Country',
+    'Category.ID' => 'Category',
+    'ShowInLocator' => 'Show in Locator',
+    'Featured' => 'Featured',
+    'Website' => 'Website',
+    'Phone' => 'Phone',
+    'EmailAddress' => 'Email'
+  );
+
 	// columns for grid field
 	static $summary_fields = array(
 		'Title' => 'Title',
-        'Store' => 'Store',
+		'Store' => 'Store',
 		'Address' => 'Address',
-        'Address2' => 'Address 2',
+		'Address2' => 'Address 2',
 		'City' => 'City',
 		'State' => 'State',
 		'Postcode' => 'Postcode',
@@ -64,7 +63,7 @@ class Location extends DataObject implements PermissionProvider{
 		'Category.Name' => 'Category',
 		'ShowInLocator.NiceAsBoolean' => 'Show in Locator',
 		'Featured.NiceAsBoolean' => 'Featured',
-        'Coords' => 'Coordinates'
+		'Coords' => 'Coordinates'
 	);
 
 	// Coords status for $summary_fields
@@ -74,65 +73,65 @@ class Location extends DataObject implements PermissionProvider{
 
     // custom labels for fields
 	function fieldLabels($includerelations = true) {
-     	$labels = parent::fieldLabels();
+		$labels = parent::fieldLabels();
 
-     	$labels['Title'] = 'Name';
-        $labels['Store'] = 'Store #';
-     	$labels['City'] = "City";
-     	$labels['Postcode'] = 'Postal Code';
-     	$labels['ShowInLocator'] = 'Show';
-        $labels['ShowInLocator.NiceAsBoolean'] = 'Show';
-     	$labels['Category.Name'] = 'Category';
-     	$labels['EmailAddress'] = 'Email';
+		$labels['Title'] = 'Name';
+		$labels['Store'] = 'Store #';
+		$labels['City'] = "City";
+		$labels['Postcode'] = 'Postal Code';
+		$labels['ShowInLocator'] = 'Show';
+		$labels['ShowInLocator.NiceAsBoolean'] = 'Show';
+		$labels['Category.Name'] = 'Category';
+		$labels['EmailAddress'] = 'Email';
 		$labels['Featured.NiceAsBoolean'] = 'Featured';
-        $labels['Coords'] = 'Coords';
+		$labels['Coords'] = 'Coords';
 
-     	return $labels;
-   	}
- 
+		return $labels;
+ 	}
+
 	public function getCMSFields() {
-		
+
 		$fields = parent::getCMSFields();
-		
+
 		// remove Main tab
-     	$fields->removeByName('Main');
-		
+		$fields->removeByName('Main');
+
 		// create and populate Info tab
 		$fields->addFieldsToTab('Root.Info', array(
 			HeaderField::create('InfoHeader', 'Contact Information'),
-            TextField::create('Store'),
+			TextField::create('Store'),
 			TextField::create('Website'),
 			TextField::create('EmailAddress'),
 			TextField::create('Phone')
 		));
-		
+
 		// change label of Suburb from Addressable to City
-//		$fields->removeByName('Suburb');
-//		$fields->insertBefore(TextField::create('Suburb', 'City'), 'State');
-		
+		//		$fields->removeByName('Suburb');
+		//		$fields->insertBefore(TextField::create('Suburb', 'City'), 'State');
+
 		// If categories have been created, show category drop down
 		if (LocationCategory::get()->Count() > 0) {
 			$fields->insertAfter(DropDownField::create('CategoryID', 'Category', LocationCategory::get()->map('ID', 'Title'))->setEmptyString('-- select --'), 'Phone');
 		}
-		
+
 		// move Title and ShowInLocator fields to Address tab from Addressable
 		$fields->insertAfter(TextField::create('Title'), 'AddressHeader');
 		$fields->insertAfter(CheckboxField::create('Featured', 'Featured'), 'Title');
 		$fields->insertAfter(CheckboxField::create('ShowInLocator', 'Show on Map'), 'Country');
 
-        // allow to be extended via DataExtension
+		// allow to be extended via DataExtension
 		$this->extend('updateCMSFields', $fields);
-				
+
 		return $fields;
 	}
 
-    public function validate() {
-        $result = parent::validate();
-        if(Locator::getMultipleLocators() && $this->LocatorID == 0) {
-            $result->error('You must associate this location with a locator page. Add the location from the desired locator page.');
-        }
-        return $result;
+  public function validate() {
+    $result = parent::validate();
+    if(Locator::getMultipleLocators() && $this->LocatorID == 0) {
+      $result->error('You must associate this location with a locator page. Add the location from the desired locator page.');
     }
+    return $result;
+  }
 
 	/**
 	 * @param Member $member
@@ -164,13 +163,13 @@ class Location extends DataObject implements PermissionProvider{
 		);
 	}
 
-    public function onBeforeWrite(){
+	public function onBeforeWrite(){
 
-        if(Locator::get()->count() == 1){
-            $this->LocatorID = Locator::get()->first()->ID;
-        }
+		if(Locator::get()->count() == 1){
+			$this->LocatorID = Locator::get()->first()->ID;
+		}
 
-        parent::onBeforeWrite();
-    }
-			
+		parent::onBeforeWrite();
+	}
+
 }
