@@ -208,6 +208,14 @@ class Locator_Controller extends Page_Controller {
 			}
 		}
 
+		$fields->push(
+			DropdownField::create(
+				'collection',
+				'',
+				CollectionPage::get()->filter(array('SubsiteID' => $this->SubsiteID))->sort('Title')->map('Title', 'Title')
+			)->setEmptyString('All Collections'));
+
+
 		$actions = FieldList::create(
 			FormAction::create('', 'Search')
 		);

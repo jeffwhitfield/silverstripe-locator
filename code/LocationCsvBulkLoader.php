@@ -2,13 +2,19 @@
 class LocationCsvBulkLoader extends CsvBulkLoader {
   public $columnMap = array(
     'Name' => 'Title',
+    'Store' => 'Store',
     'Address' => 'Address',
     'Address2' => 'Address2',
     'City' => 'Suburb',
     'State' => 'State',
     'Zip' => 'Postcode',
     'Category' => 'Category.Name',
-    'Email' => 'EmailAddress'
+    'Website' => 'Website',
+    'Email' => 'EmailAddress',
+    'Phone' => 'Phone',
+    'Collections' => 'Collections',
+    'SubsiteID' => 'SubsiteID',
+    'Featured' => 'Featured',
   );
 
   public $duplicateChecks = array(

@@ -8,6 +8,8 @@ class Location extends DataObject implements PermissionProvider{
 		'Website' => 'Varchar(255)',
 		'Phone' => 'Varchar(40)',
 		'EmailAddress' => 'Varchar(255)',
+		'Collections' => 'Text',
+		'SubsiteID' => 'Int',
 		'ShowInLocator' => 'Boolean',
 	);
 
@@ -83,6 +85,8 @@ class Location extends DataObject implements PermissionProvider{
 		$labels['ShowInLocator.NiceAsBoolean'] = 'Show';
 		$labels['Category.Name'] = 'Category';
 		$labels['EmailAddress'] = 'Email';
+		$labels['Collections'] = 'Collections';
+		$labels['SubsiteID'] = 'Subsite';
 		$labels['Featured.NiceAsBoolean'] = 'Featured';
 		$labels['Coords'] = 'Coords';
 
@@ -96,6 +100,17 @@ class Location extends DataObject implements PermissionProvider{
 		// remove Main tab
 		$fields->removeByName('Main');
 
+		if (Subsite::get()->Count() > 0) {
+			$fields->addFieldToTab('Root.Main', DropDownField::create('SubsiteID', 'Subsite', Subsite::get()->map('ID', 'Title'))->setEmptyString('-- select --'));
+		}
+
+		// If collections are available, show collections checkbox set
+		if (CollectionPage::get()->filter(array('SubsiteID' => $this->SubsiteID))->Count() > 0) {
+			$fields->addFieldToTab('Root.Main', CheckboxSetField::create('Collections', 'Collections', CollectionPage::get()->filter(array('SubsiteID' => $this->SubsiteID))->sort('Title')->map('Title', 'Title'))->setEmptyString('-- select --'));
+		} else {
+			$fields->addFieldToTab('Root.Main', TextField::create('Collections', 'Collections'));
+		}
+
 		// create and populate Info tab
 		$fields->addFieldsToTab('Root.Info', array(
 			HeaderField::create('InfoHeader', 'Contact Information'),
@@ -104,10 +119,6 @@ class Location extends DataObject implements PermissionProvider{
 			TextField::create('EmailAddress'),
 			TextField::create('Phone')
 		));
-
-		// change label of Suburb from Addressable to City
-		//		$fields->removeByName('Suburb');
-		//		$fields->insertBefore(TextField::create('Suburb', 'City'), 'State');
 
 		// If categories have been created, show category drop down
 		if (LocationCategory::get()->Count() > 0) {

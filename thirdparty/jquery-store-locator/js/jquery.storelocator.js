@@ -474,7 +474,8 @@ $.fn.storeLocator = function(options) {
                   'hours2': $(this).attr('hours2'),
                   'hours3': $(this).attr('hours3'),
                   'category': $(this).attr('category'),
-                  'featured': $(this).attr('featured')
+                  'featured': $(this).attr('featured'),
+                  'collections': $(this).attr('collections')
                 };
 
                 if(locationData['web']) locationData['web'] = locationData['web'].replace("http://",""); // Remove scheme (todo: should NOT be done)
@@ -482,28 +483,37 @@ $.fn.storeLocator = function(options) {
                 locationData['distance'] = GeoCodeCalc.CalcDistance(orig_lat,orig_lng,locationData['lat'],locationData['lng'], GeoCodeCalc.EarthRadius);
 
                 //Create the array
-                  var selectedCat = $('#' + settings.categoryID).val();
-                  if (selectedCat) {
+                var selectedCat = $('#' + settings.categoryID).val();
+                var selectedCollection = $('select[name="collection"]').val();
+                if (selectedCat) {
+                    if(locationData['category'] === selectedCat){
+                        locationset[i] = locationData;
+                    }
+                    else{
+                        return;
+                    }
+                }
+                else if(selectedCollection){
+                  var locationCollections = locationData['collections'].split(',');
+                  if($.inArray(selectedCollection, locationCollections) > -1){
+                      locationset[i] = locationData;
+                  }
+                  else{
+                      return;
+                  }
 
-                      if(locationData['category'] === selectedCat){
-                          locationset[i] = locationData;
-                      }
-                      else{
-                          return;
-                      }
-                  }
+                }
                 else if(settings.maxDistance === true && firstRun !== true && maxDistance){
-                      if(locationData['distance'] < maxDistance){
-                          locationset[i] = locationData;
-                      }
-                      else{
-                          return;
-                      }
-                  }
-                else{
+                    if(locationData['distance'] < maxDistance){
+                        locationset[i] = locationData;
+                    }
+                    else{
+                        return;
+                    }
+                }
+                else {
                   locationset[i] = locationData;
                 }
-
                 i++;
               });
             }
@@ -715,12 +725,16 @@ $.fn.storeLocator = function(options) {
 
                //Create the links that focus on the related marker
                $("#" + settings.listDiv + ' ul').empty();
-               $(markers).each(function(x, marker){
-                var letter = String.fromCharCode("A".charCodeAt(0) + x);
-                //This needs to happen outside the loop or there will be a closure problem with creating the infowindows attached to the list click
-                var currentMarker = markers[x];
-                listClick(currentMarker);
-              });
+               if(markers.length > 0){
+                 $(markers).each(function(x, marker){
+                  var letter = String.fromCharCode("A".charCodeAt(0) + x);
+                  //This needs to happen outside the loop or there will be a closure problem with creating the infowindows attached to the list click
+                  var currentMarker = markers[x];
+                  listClick(currentMarker);
+                });
+              } else {
+                $('#' + settings.listDiv + ' ul').append('<li><p class="text-danger"><strong>Sorry, the collection selected is currently unavailable in stores near your address.</strong></li>');
+              }
 
               function listClick(marker){
                 //Define the location data

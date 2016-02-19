@@ -18,18 +18,20 @@ class LocationAdmin extends ModelAdmin {
     return array(
       'Title' => 'Name',
       'Address' => 'Address',
-      'Address2' => 'Address 2',
+      'Address2' => 'Address2',
       'Suburb' => 'City',
       'State' => 'State',
-      'Postcode' => 'Postal Code',
+      'Postcode' => 'Postcode',
       'Country' => 'Country',
-      'Website' => 'Website',
-      'Phone' => 'Phone',
-      'Fax' => 'Fax',
-      'EmailAddress' => 'Email Address',
-      'ShowInLocator' => 'Show',
       'Lat' => 'Lat',
-      'Lng' => 'Lng'
+      'Lng' => 'Lng',
+      'Store' => 'Store',
+      'Website' => 'Website',
+      'EmailAddress' => 'EmailAddress',
+      'Phone' => 'Phone',
+      'Collections' => 'Collections',
+      'Featured' => 'Featured',
+      'SubsiteID' => 'SubsiteID',
     );
   }
 }
