@@ -482,6 +482,8 @@ $.fn.storeLocator = function(options) {
 
                 locationData['distance'] = GeoCodeCalc.CalcDistance(orig_lat,orig_lng,locationData['lat'],locationData['lng'], GeoCodeCalc.EarthRadius);
 
+                locationData['featured'] = locationData['collections'].length > 0 ? 'true' : 'false';
+
                 //Create the array
                 var selectedCat = $('#' + settings.categoryID).val();
                 var selectedCollection = $('select[name="collection"]').val();
@@ -496,10 +498,12 @@ $.fn.storeLocator = function(options) {
                 else if(selectedCollection){
                   var locationCollections = locationData['collections'].split(',');
                   if($.inArray(selectedCollection, locationCollections) > -1){
+                      locationData['featured'] = 'true';
                       locationset[i] = locationData;
                   }
-                  else{
-                      return;
+                  else {
+                    locationData['featured'] = 'false';
+                    locationset[i] = locationData;
                   }
 
                 }
