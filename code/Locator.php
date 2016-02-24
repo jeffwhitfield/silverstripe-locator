@@ -213,7 +213,7 @@ class Locator_Controller extends Page_Controller {
 				'collection',
 				'',
 				CollectionPage::get()->filter(array('SubsiteID' => $this->SubsiteID))->sort('Title')->map('Title', 'Title')
-			)->setEmptyString('All Collections')
+			)
 		);
 
 		$fields->push(
