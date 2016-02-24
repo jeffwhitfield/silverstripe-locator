@@ -213,8 +213,12 @@ class Locator_Controller extends Page_Controller {
 				'collection',
 				'',
 				CollectionPage::get()->filter(array('SubsiteID' => $this->SubsiteID))->sort('Title')->map('Title', 'Title')
-			)->setEmptyString('All Collections'));
+			)->setEmptyString('All Collections')
+		);
 
+		$fields->push(
+			HiddenField::create('maxdistance','','100')
+		);
 
 		$actions = FieldList::create(
 			FormAction::create('', 'Search')
