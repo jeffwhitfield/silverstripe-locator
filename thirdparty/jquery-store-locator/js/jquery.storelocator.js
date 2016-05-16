@@ -702,7 +702,7 @@ $.fn.storeLocator = function(options) {
                 var marker = new google.maps.Marker({
                     position: originPoint,
                     map: map,
-                    icon: 'http://maps.google.com/mapfiles/ms/icons/'+ settings.originpinColor +'-dot.png',
+                    icon: 'https://maps.google.com/mapfiles/ms/icons/'+ settings.originpinColor +'-dot.png',
                     draggable: false
                   });
               }

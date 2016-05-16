@@ -82,7 +82,7 @@ class Locator_Controller extends Page_Controller {
 
 		Requirements::javascript('framework/thirdparty/jquery/jquery.js');
 		if(Locator::getLocations()){
-			Requirements::javascript('http://maps.google.com/maps/api/js?sensor=false');
+			Requirements::javascript('https://maps.google.com/maps/api/js?sensor=false');
 			Requirements::javascript('locator/thirdparty/handlebars/handlebars-v1.3.0.js');
 			Requirements::javascript('locator/thirdparty/jquery-store-locator/js/jquery.storelocator.js');
 		}
