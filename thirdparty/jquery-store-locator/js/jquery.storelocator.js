@@ -779,7 +779,7 @@ $.fn.storeLocator = function(options) {
                 //Set up pin icon with the Google Charts API for all of our markers
                 var pinColor = (featured ? settings.pinColorFeatured : settings.pinColor);
                 var pinTextColor = (featured ? settings.pinTextColorFeatured : settings.pinTextColor);
-                var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + letter + "|" + pinColor + "|" + pinTextColor,
+                var pinImage = new google.maps.MarkerImage("//chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + letter + "|" + pinColor + "|" + pinTextColor,
                   new google.maps.Size(21, 34),
                   new google.maps.Point(0,0),
                   new google.maps.Point(10, 34));
