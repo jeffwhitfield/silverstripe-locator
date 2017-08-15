@@ -31,7 +31,6 @@ class LocationAdmin extends ModelAdmin {
       'Phone' => 'Phone',
       'Collections' => 'Collections',
       'Featured' => 'Featured',
-      'SubsiteID' => 'SubsiteID',
     );
   }
 }

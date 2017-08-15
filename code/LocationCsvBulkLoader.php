@@ -13,7 +13,6 @@ class LocationCsvBulkLoader extends CsvBulkLoader {
     'Email' => 'EmailAddress',
     'Phone' => 'Phone',
     'Collections' => 'Collections',
-    'SubsiteID' => 'SubsiteID',
     'Featured' => 'Featured',
   );
 

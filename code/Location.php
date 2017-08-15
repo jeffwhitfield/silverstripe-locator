@@ -9,7 +9,6 @@ class Location extends DataObject implements PermissionProvider{
 		'Phone' => 'Varchar(40)',
 		'EmailAddress' => 'Varchar(255)',
 		'Collections' => 'Text',
-		'SubsiteID' => 'Int',
 		'ShowInLocator' => 'Boolean',
 	);
 
@@ -86,7 +85,6 @@ class Location extends DataObject implements PermissionProvider{
 		$labels['Category.Name'] = 'Category';
 		$labels['EmailAddress'] = 'Email';
 		$labels['Collections'] = 'Collections';
-		$labels['SubsiteID'] = 'Subsite';
 		$labels['Featured.NiceAsBoolean'] = 'Featured';
 		$labels['Coords'] = 'Coords';
 
@@ -100,13 +98,9 @@ class Location extends DataObject implements PermissionProvider{
 		// remove Main tab
 		$fields->removeByName('Main');
 
-		if (Subsite::get()->Count() > 0) {
-			$fields->addFieldToTab('Root.Main', DropDownField::create('SubsiteID', 'Subsite', Subsite::get()->map('ID', 'Title'))->setEmptyString('-- select --'));
-		}
-
 		// If collections are available, show collections checkbox set
-		if (CollectionPage::get()->filter(array('SubsiteID' => $this->SubsiteID))->Count() > 0) {
-			$fields->addFieldToTab('Root.Main', CheckboxSetField::create('Collections', 'Collections', CollectionPage::get()->filter(array('SubsiteID' => $this->SubsiteID))->sort('Title')->map('Title', 'Title'))->setEmptyString('-- select --'));
+		if (CollectionPage::get()->Count() > 0) {
+			$fields->addFieldToTab('Root.Main', CheckboxSetField::create('Collections', 'Collections', CollectionPage::get()->sort('Title')->map('Title', 'Title'))->setEmptyString('-- select --'));
 		} else {
 			$fields->addFieldToTab('Root.Main', TextField::create('Collections', 'Collections'));
 		}
