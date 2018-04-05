@@ -30,7 +30,7 @@ class Locator extends Page {
     // Locations Grid Field
 		$config = (self::getMultipleLocators())
           ? GridFieldConfig_RelationEditor::create() : GridFieldConfig_RecordEditor::create();
-    $locations = (self::getMultipleLocators()) ? $this->Locations() : Location::get();
+    $locations = (self::getMultipleLocators()) ? $this->Locations()->filter(array('SubsiteID'=>Subsite::currentSubsiteID())) : Location::get()->filter(array('SubsiteID'=>Subsite::currentSubsiteID()));
     $fields->addFieldToTab("Root.Locations", GridField::create("Locations", "Locations", $locations, $config));
 
     // Location categories
@@ -53,6 +53,7 @@ class Locator extends Page {
 
 	public static function getLocations($filter = array(), $exclude = array()){
 		$filter['ShowInLocator'] = true;
+        $filter['SubsiteID'] = Subsite::currentSubsiteID();
 		return Location::get()
 			->exclude($exclude)
 			->exclude('Lat', 0)
