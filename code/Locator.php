@@ -212,7 +212,7 @@ class Locator_Controller extends Page_Controller {
 			DropdownField::create(
 				'collection',
 				'',
-				CollectionPage::get()->filter(array('SubsiteID' => $this->SubsiteID))->sort('Title')->map('Title', 'Title')
+				ProductHolder::get()->filter(array('SubsiteID' => $this->SubsiteID))->sort('Title')->map('Title', 'Title')
 			)
 		);
 
